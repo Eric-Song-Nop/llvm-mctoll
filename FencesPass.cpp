@@ -78,6 +78,7 @@ static void OptimizeFencesAway(BasicBlock &BB) {
 }
 
 bool FencesPass::runOnFunction(Function &F) {
+  unsigned fence_cnt = 0;
   if (!F.isDeclaration()) {
     errs() << "optimize-fences: ";
     if (OptimizeFences) {
@@ -86,11 +87,12 @@ bool FencesPass::runOnFunction(Function &F) {
       errs() << "false\n";
     }
     for (BasicBlock &BB : F) {
-      PlaceFencesInBlock(BB);
+      fence_cnt += PlaceFencesInBlock(BB);
       if (OptimizeFences)
         OptimizeFencesAway(BB);
     }
   }
+  outs() << fence_cnt << "Fences Intersted\n";
   return true;
 }
 
